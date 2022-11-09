@@ -1,8 +1,8 @@
 # Daily-Bonus
 
-[dev](https://github.com/jckling/Daily-Bonus/tree/dev) 分支：使用腾讯云函数实现多种签到，基于 [Sitoi/dailycheckin](https://github.com/Sitoi/dailycheckin) 修改，支持多种消息推送。
+[dev](https://github.com/jckling/Daily-Bonus/tree/dev) 分支：使用腾讯云函数签到，基于 [Sitoi/dailycheckin](https://github.com/Sitoi/dailycheckin) 修改，支持多种消息推送。
 
-[master](https://github.com/jckling/Daily-Bonus/tree/master) 分支：使用 Github Action 签到，用哪个就配置相应的环境变量，默认输出到控制台。
+[master](https://github.com/jckling/Daily-Bonus/tree/master) 分支：使用 Github Action 签到，用哪个就配置相应的环境变量，默认输出到控制台，支持 Telegram 消息推送。
 
 
 ## 说明
@@ -10,11 +10,11 @@
 实现功能
 - [x] bilibili 直播（辣条）
 - [x] yamibo 论坛（对象）
-- [x] 网易云手机端（云贝）
+- [x] ~~网易云手机端（云贝）~~【已失效】
 - [x] v2ex （铜币）
-  - 由于 Github Action 的时区不同，签的是昨天
+    - 由于 Github Action 的时区不同，签的是昨天
 - [x] ff14 （积分）
-  - 使用 dev 分支 + 腾讯云函数部署
+    - 使用 dev 分支 + 腾讯云函数部署
 - [x] telegram-bot 推送
 - [ ] 哔咔漫画打卡（哔咔）
 
@@ -28,17 +28,24 @@ Telegram 推送签到结果
 ![](screenshots/result.png)
 
 
-## GitHub Actions
+## 使用方式
 
-0. 右上角点个 star
+0. 右上角点个 star（可选）
 1. 右上角 fork 本仓库
-2. 在克隆的仓库中添加环境变量：Actions - New repository secret
+2. 在克隆的仓库中添加环境变量：Settings - Secrets - Actions
 3. 每天早上 7:30 开始运行
 
 添加 Secrets 之后可以更新值，但不能修改名称。
 
-![](screenshots/config.png)
+![](screenshots/settings.png)
 
+
+更新方式：打开自己的仓库页面，点击 `Sync fork - Update branch` 即可。
+
+![](screenshots/update.jpg)
+
+
+## 配置
 ### Telegram 推送
 
 | Name              | Description |
@@ -47,6 +54,46 @@ Telegram 推送签到结果
 | TG_BOT_TOKEN      | bot token   |
 
 用户 id 的获取方式可以看这个：[How can I send a message to someone with my telegram bot using their Username](https://stackoverflow.com/questions/41664810/how-can-i-send-a-message-to-someone-with-my-telegram-bot-using-their-username)
+
+### V2EX
+
+V2EX 论坛使用 Cookie 登录，每 **一个月** 需要更新一次。
+
+| Name         | Description |
+| ------------ | ----------- |
+| V2EX_COOKIES | Cookie      |
+
+登录 v2ex 后，使用开发者工具查看 Cookie
+
+- Chrome：F12 - Network - F5 - Doc - www.v2ex.com - Headers - Request Headers - cookie
+- 删除 Cookie 中的 ip 信息：例如 `EeqY_2132_lip=111.111.111.111%2C1661066680;`
+
+![](screenshots/v2ex_cookie.png)
+
+### Bilibili
+
+bilibili 直播间使用 Cookie 登录，需要添加以下三项：
+
+| Name                | Description                   |
+|---------------------|-------------------------------|
+| BILIBILI_bili_jct   | 从 Cookie 获取，`bili_jct`     |
+| BILIBILI_DedeUserID | 从 Cookie 获取，`DedeUserID`   |
+| BILIBILI_SESSDATA   | 从 Cookie 获取，`SESSDATA`     |
+
+登录 https://www.bilibili.com 后，使用开发者工具查看 Cookie
+- Chrome：F12 - Network - F5 - Fetch/XHR - nav - Cookies
+
+![](screenshots/bilibili_cookies.png)
+
+### Yamibo
+
+300 论坛使用 Cookie 登录，需要添加以下两项：
+- 登录 https://bbs.yamibo.com/forum.php 后，使用开发者工具查看 Cookie
+
+| Name                            | Description                                 |
+| ------------------------------- |---------------------------------------------|
+| YAMIBO_EeqY_2132_saltkey        | 从 Cookie 获取，`EeqY_2132_saltkey`          |
+| YAMIBO_EeqY_2132_auth           | 从 Cookie 获取，`EeqY_2132_auth`             |
 
 ### FFXIV
 
@@ -69,44 +116,14 @@ FF14 积分商城使用账号和密码登录。**请使用 dev 分支 + 腾讯�
 | MUSIC_CELLPHONE | 手机号      |
 | MUSIC_PASSWORD  | 密码        |
 
-### V2EX
-
-V2EX 论坛使用 Cookie 登录，目前每 **2 周** 需要更换一次。
-
-| Name         | Description |
-| ------------ | ----------- |
-| V2EX_COOKIES | Cookie      |
-
-登录 v2ex 后，使用开发者工具查看 Cookie ，右键复制即可
-
-- Chrome：F12 - Network - F5 - Doc - www.v2ex.com - Headers - Request Headers - cookie
-
-![](screenshots/cookie.png)
-
-### Bilibili
-
-bilibili 直播间使用 Cookie 登录。
-
-| Name             | Description |
-| ---------------- | ----------- |
-| BILIBILI_COOKIES | Cookie      |
-
-### Yamibo
-
-300 论坛使用 Cookie 登录。
-
-| Name           | Description |
-| -------------- | ----------- |
-| YAMIBO_COOKIES | Cookie      |
-
 ### Picacomic
 
 哔咔漫画使用账号（邮箱/用户名）和密码登录。
 
-| Name          | Description |
-|---------------|-------------|
-| PICA_EMAIL    | 邮箱或用户名 |
-| PICA_PASSWORD | 密码        |
+| Name          | Description  |
+|---------------|--------------|
+| PICA_EMAIL    | 邮箱或用户名  |
+| PICA_PASSWORD | 密码         |
 
 
 ## 参阅
